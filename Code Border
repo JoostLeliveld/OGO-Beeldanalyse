@@ -1,0 +1,30 @@
+import cv2
+import numpy as np
+import math
+
+pi = math.pi
+# image flipping
+img = cv2.imread('melanoma.png')
+
+h = img.shape[0]
+w = img.shape[1]
+
+gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+# convert the grayscale image to binary image
+ret,thresh = cv2.threshold(gray_image,127,255,0)
+
+# calculate moments of binary image
+M = cv2.moments(thresh)
+contours,hierarchy = cv2.findContours(thresh, 1, 2)
+cnt = contours[0]
+
+
+area = cv2.contourArea(cnt)
+perimeter = cv2.arcLength(cnt,True)
+compactness = (4*pi * area) / perimeter**2 #Dankzij dit krijg je een mooie schaal van 1 tot 0 met 1 strakke border en 0 niet. 
+oa_ratio = area/perimeter # dit is nog een andere manier die de border weer kan geven
+print(area)
+print(perimeter)
+print(compactness)
+print(oa_ratio)
